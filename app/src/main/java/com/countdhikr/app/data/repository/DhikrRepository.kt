@@ -211,8 +211,18 @@ class DhikrRepository(private val dataStore: AppDataStore) {
 
     suspend fun setDayNumberOffset(offset: Int) {
         update { state ->
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+            val settings = state.dailyDhikrSettings.copy(dayNumberOffset = offset)
+            val startDate = settings.trackingStartDate ?: todayDateString()
+            
+            val updatedDailyDhikrs = state.dailyDhikrs.map { day ->
+                val dayNum = computeDayNumber(startDate, day.date, dateFormat, offset)
+                day.copy(dayNumber = dayNum)
+            }
+            
             state.copy(
-                dailyDhikrSettings = state.dailyDhikrSettings.copy(dayNumberOffset = offset)
+                dailyDhikrSettings = settings,
+                dailyDhikrs = updatedDailyDhikrs
             )
         }
     }

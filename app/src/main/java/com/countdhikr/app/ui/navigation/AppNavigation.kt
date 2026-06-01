@@ -86,7 +86,13 @@ fun AppNavigation() {
         ) { page ->
             when (page) {
                 0 -> HomeScreen()
-                1 -> ListScreen()
+                1 -> ListScreen(
+                    onNavigateToHome = {
+                        coroutineScope.launch {
+                            pagerState.animateScrollToPage(0)
+                        }
+                    }
+                )
                 2 -> PrayerScreen()
                 3 -> QiblaScreen(isPageActive = pagerState.currentPage == 3)
                 4 -> SettingsScreen()

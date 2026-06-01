@@ -69,7 +69,10 @@ private val BorderColor: Color
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ListScreen(viewModel: ListViewModel = viewModel()) {
+fun ListScreen(
+    viewModel: ListViewModel = viewModel(),
+    onNavigateToHome: () -> Unit = {}
+) {
     val uiState by viewModel.uiState.collectAsState()
     val showAddDhikr by viewModel.showAddDhikrDialog.collectAsState()
     val showAddDua by viewModel.showAddDuaDialog.collectAsState()
@@ -181,7 +184,7 @@ fun ListScreen(viewModel: ListViewModel = viewModel()) {
                 modifier = Modifier.weight(1f)
             ) { page ->
                 when (page) {
-                    0 -> DhikrListContent(viewModel, uiState)
+                    0 -> DhikrListContent(viewModel, uiState, onNavigateToHome)
                     1 -> DuaListContent(viewModel, uiState)
                 }
             }
@@ -247,7 +250,11 @@ fun ListScreen(viewModel: ListViewModel = viewModel()) {
 }
 
 @Composable
-fun DhikrListContent(viewModel: ListViewModel, uiState: ListUiState) {
+fun DhikrListContent(
+    viewModel: ListViewModel,
+    uiState: ListUiState,
+    onNavigateToHome: () -> Unit
+) {
     val todayStr = remember { DateUtils.getTodayDateString() }
     
     val sortedDailyDhikrs = remember(uiState.dailyDhikrs) {
@@ -355,6 +362,7 @@ fun DhikrListContent(viewModel: ListViewModel, uiState: ListUiState) {
                         },
                         onSelectDhikr = { itemId ->
                             viewModel.selectDailyDhikr(itemId)
+                            onNavigateToHome()
                         }
                     )
                 } else {
@@ -434,7 +442,12 @@ fun DhikrListContent(viewModel: ListViewModel, uiState: ListUiState) {
         // General Counter Option
         item {
             val isActive = uiState.activeDhikrId == null && uiState.activeDailyDhikrId == null
-            val onClick = remember { { viewModel.selectDhikr("") } }
+            val onClick = remember(onNavigateToHome) {
+                {
+                    viewModel.selectDhikr("")
+                    onNavigateToHome()
+                }
+            }
             GeneralDhikrCard(
                 title = "General Counter",
                 arabic = "∞",
@@ -450,7 +463,12 @@ fun DhikrListContent(viewModel: ListViewModel, uiState: ListUiState) {
         if (uiState.dhikrs.isNotEmpty()) {
             items(uiState.dhikrs, key = { it.id }) { dhikr ->
                 val isActive = uiState.activeDhikrId == dhikr.id && uiState.activeDailyDhikrId == null
-                val onClick = remember(dhikr.id) { { viewModel.selectDhikr(dhikr.id) } }
+                val onClick = remember(dhikr.id, onNavigateToHome) {
+                    {
+                        viewModel.selectDhikr(dhikr.id)
+                        onNavigateToHome()
+                    }
+                }
                 val onDelete = remember(dhikr.id) { { viewModel.deleteDhikr(dhikr.id) } }
                 GeneralDhikrCard(
                     title = dhikr.title,
