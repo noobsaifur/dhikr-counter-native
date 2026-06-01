@@ -114,6 +114,7 @@ private val DarkColorScheme: ColorScheme = darkColorScheme(
 @Composable
 fun CountDhikrTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
+    animateBackground: Boolean = true,
     content: @Composable () -> Unit,
 ) {
     val colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme
@@ -122,8 +123,6 @@ fun CountDhikrTheme(
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            window.statusBarColor = android.graphics.Color.TRANSPARENT
-            window.navigationBarColor = android.graphics.Color.TRANSPARENT
             val insetsController = WindowCompat.getInsetsController(window, view)
             insetsController.isAppearanceLightStatusBars = !darkTheme
             insetsController.isAppearanceLightNavigationBars = !darkTheme
@@ -135,7 +134,10 @@ fun CountDhikrTheme(
             colorScheme = colorScheme,
             typography = CountDhikrTypography,
         ) {
-            AuroraBackground(darkTheme = darkTheme) {
+            AuroraBackground(
+                darkTheme = darkTheme,
+                animateBackground = animateBackground
+            ) {
                 content()
             }
         }

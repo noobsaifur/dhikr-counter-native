@@ -20,6 +20,7 @@ import kotlin.math.sin
 fun AuroraBackground(
     modifier: Modifier = Modifier,
     darkTheme: Boolean = isSystemInDarkTheme(),
+    animateBackground: Boolean = true,
     content: @Composable BoxScope.() -> Unit
 ) {
     val infiniteTransition = rememberInfiniteTransition(label = "aurora")
@@ -52,70 +53,111 @@ fun AuroraBackground(
                 val width = size.width
                 val height = size.height
 
-                // Calculate moving centers for the radial gradients
-                // Ellipse 1: at 15% 15% originally
-                val c1X = width * (0.15f + 0.05f * sin(animationTime))
-                val c1Y = height * (0.15f + 0.05f * cos(animationTime))
-                val r1 = width * 0.70f
+                if (!animateBackground) {
+                    // Beautiful high-fidelity static gradients (drawn once, cached, no frame ticks)
+                    val c1 = Offset(width * 0.15f, height * 0.15f)
+                    val c2 = Offset(width * 0.85f, height * 0.25f)
+                    val c3 = Offset(width * 0.35f, height * 0.85f)
+                    val c4 = Offset(width * 0.90f, height * 0.80f)
 
-                // Ellipse 2: at 85% 25% originally
-                val c2X = width * (0.85f - 0.06f * cos(animationTime + 1f))
-                val c2Y = height * (0.25f + 0.05f * sin(animationTime + 1f))
-                val r2 = width * 0.55f
+                    drawCircle(
+                        brush = Brush.radialGradient(
+                            colors = listOf(mesh1.copy(alpha = 0.8f), Color.Transparent),
+                            center = c1,
+                            radius = width * 0.70f
+                        ),
+                        center = c1,
+                        radius = width * 0.70f
+                    )
+                    drawCircle(
+                        brush = Brush.radialGradient(
+                            colors = listOf(mesh2.copy(alpha = 0.7f), Color.Transparent),
+                            center = c2,
+                            radius = width * 0.55f
+                        ),
+                        center = c2,
+                        radius = width * 0.55f
+                    )
+                    drawCircle(
+                        brush = Brush.radialGradient(
+                            colors = listOf(mesh3.copy(alpha = 0.65f), Color.Transparent),
+                            center = c3,
+                            radius = width * 0.65f
+                        ),
+                        center = c3,
+                        radius = width * 0.65f
+                    )
+                    drawCircle(
+                        brush = Brush.radialGradient(
+                            colors = listOf(mesh4.copy(alpha = 0.55f), Color.Transparent),
+                            center = c4,
+                            radius = width * 0.50f
+                        ),
+                        center = c4,
+                        radius = width * 0.50f
+                    )
+                } else {
+                    // Draw moving sinusoidal dynamic gradients (animated path, frame ticks)
+                    val c1X = width * (0.15f + 0.05f * sin(animationTime))
+                    val c1Y = height * (0.15f + 0.05f * cos(animationTime))
+                    val r1 = width * 0.70f
 
-                // Ellipse 3: at 35% 85% originally
-                val c3X = width * (0.35f + 0.07f * sin(animationTime - 2f))
-                val c3Y = height * (0.85f - 0.05f * cos(animationTime - 2f))
-                val r3 = width * 0.65f
+                    val c2X = width * (0.85f - 0.06f * cos(animationTime + 1f))
+                    val c2Y = height * (0.25f + 0.05f * sin(animationTime + 1f))
+                    val r2 = width * 0.55f
 
-                // Ellipse 4: at 90% 80% originally
-                val c4X = width * (0.90f - 0.05f * cos(animationTime + 3f))
-                val c4Y = height * (0.80f + 0.04f * sin(animationTime + 3f))
-                val r4 = width * 0.50f
+                    val c3X = width * (0.35f + 0.07f * sin(animationTime - 2f))
+                    val c3Y = height * (0.85f - 0.05f * cos(animationTime - 2f))
+                    val r3 = width * 0.65f
 
-                // Draw Ellipse 1 (Emerald Aurora)
-                drawCircle(
-                    brush = Brush.radialGradient(
-                        colors = listOf(mesh1.copy(alpha = 0.8f), Color.Transparent),
+                    val c4X = width * (0.90f - 0.05f * cos(animationTime + 3f))
+                    val c4Y = height * (0.80f + 0.04f * sin(animationTime + 3f))
+                    val r4 = width * 0.50f
+
+                    // Draw Ellipse 1 (Emerald Aurora)
+                    drawCircle(
+                        brush = Brush.radialGradient(
+                            colors = listOf(mesh1.copy(alpha = 0.8f), Color.Transparent),
+                            center = Offset(c1X, c1Y),
+                            radius = r1
+                        ),
                         center = Offset(c1X, c1Y),
                         radius = r1
-                    ),
-                    center = Offset(c1X, c1Y),
-                    radius = r1
-                )
+                    )
 
-                // Draw Ellipse 2 (Golden Aurora)
-                drawCircle(
-                    brush = Brush.radialGradient(
-                        colors = listOf(mesh2.copy(alpha = 0.7f), Color.Transparent),
+                    // Draw Ellipse 2 (Golden Aurora)
+                    drawCircle(
+                        brush = Brush.radialGradient(
+                            colors = listOf(mesh2.copy(alpha = 0.7f), Color.Transparent),
+                            center = Offset(c2X, c2Y),
+                            radius = r2
+                        ),
                         center = Offset(c2X, c2Y),
                         radius = r2
-                    ),
-                    center = Offset(c2X, c2Y),
-                    radius = r2
-                )
+                    )
 
-                // Draw Ellipse 3 (Blueish Aurora)
-                drawCircle(
-                    brush = Brush.radialGradient(
-                        colors = listOf(mesh3.copy(alpha = 0.65f), Color.Transparent),
+                    // Draw Ellipse 3 (Blueish Aurora)
+                    drawCircle(
+                        brush = Brush.radialGradient(
+                            colors = listOf(mesh3.copy(alpha = 0.65f), Color.Transparent),
+                            center = Offset(c3X, c3Y),
+                            radius = r3
+                        ),
                         center = Offset(c3X, c3Y),
                         radius = r3
-                    ),
-                    center = Offset(c3X, c3Y),
-                    radius = r3
-                )
+                    )
 
-                // Draw Ellipse 4 (Muted Teal Aurora)
-                drawCircle(
-                    brush = Brush.radialGradient(
-                        colors = listOf(mesh4.copy(alpha = 0.55f), Color.Transparent),
+                    // Draw Ellipse 4 (Muted Teal Aurora)
+                    drawCircle(
+                        brush = Brush.radialGradient(
+                            colors = listOf(mesh4.copy(alpha = 0.55f), Color.Transparent),
+                            center = Offset(c4X, c4Y),
+                            radius = r4
+                        ),
                         center = Offset(c4X, c4Y),
                         radius = r4
-                    ),
-                    center = Offset(c4X, c4Y),
-                    radius = r4
-                )
+                    )
+                }
             },
         content = content
     )

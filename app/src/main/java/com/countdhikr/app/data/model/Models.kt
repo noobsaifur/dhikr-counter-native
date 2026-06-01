@@ -83,6 +83,7 @@ data class AppSettings(
     val vibrateIntensity: VibrateIntensity = VibrateIntensity.MEDIUM,
     val sound: Boolean = false,
     val darkMode: Boolean = true,
+    val animateBackground: Boolean = true,
     val reminderNotification: Boolean = false,
     val dhikrReminderEnabled: Boolean = false,
     val salatReminderEnabled: Boolean = false,

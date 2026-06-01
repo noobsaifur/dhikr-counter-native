@@ -12,7 +12,7 @@
 -keepattributes *Annotation*,Signature,InnerClasses,EnclosingMethod
 
 -keepclassmembers interface * {
-    @retrofit2.http/* <methods>;
+    @retrofit2.http.** <methods>;
 }
 
 -keep class retrofit2.** { *; }

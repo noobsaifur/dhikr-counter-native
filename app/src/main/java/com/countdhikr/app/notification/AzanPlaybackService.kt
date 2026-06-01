@@ -26,6 +26,7 @@ import kotlinx.coroutines.launch
 class AzanPlaybackService : Service() {
     private var mediaPlayer: MediaPlayer? = null
     private var vibrator: Vibrator? = null
+    private var fallbackRingtone: android.media.Ringtone? = null
     private var isPlaying = false
     private val scope = CoroutineScope(Dispatchers.IO)
     
@@ -118,8 +119,8 @@ class AzanPlaybackService : Service() {
                         }
                         
                         setOnErrorListener { _, what, extra ->
-                            Log.e(TAG, "MediaPlayer error: what=$what, extra=$extra. Stopping service.")
-                            stopSelf()
+                            Log.e(TAG, "MediaPlayer error: what=$what, extra=$extra. Playing fallback alarm sound.")
+                            playFallbackAlarm()
                             true
                         }
                         
@@ -142,9 +143,30 @@ class AzanPlaybackService : Service() {
                     }
                 }
             } catch (e: Exception) {
-                Log.e(TAG, "Error starting MediaPlayer: ${e.message}", e)
-                stopSelf()
+                Log.e(TAG, "Error starting MediaPlayer: ${e.message}. Playing fallback alarm sound.", e)
+                playFallbackAlarm()
             }
+        }
+    }
+
+    private fun playFallbackAlarm() {
+        try {
+            val alert: android.net.Uri = android.media.RingtoneManager.getDefaultUri(android.media.RingtoneManager.TYPE_ALARM)
+                ?: android.media.RingtoneManager.getDefaultUri(android.media.RingtoneManager.TYPE_NOTIFICATION)
+            fallbackRingtone = android.media.RingtoneManager.getRingtone(applicationContext, alert)
+            fallbackRingtone?.let {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    it.audioAttributes = AudioAttributes.Builder()
+                        .setUsage(AudioAttributes.USAGE_ALARM)
+                        .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                        .build()
+                }
+                it.play()
+                Log.i(TAG, "Playing offline fallback alarm sound successfully.")
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to play fallback alarm sound: ${e.message}", e)
+            stopSelf()
         }
     }
 
@@ -209,6 +231,17 @@ class AzanPlaybackService : Service() {
         Log.i(TAG, "Service onDestroy called. Releasing resources.")
         
         stopVibration()
+        
+        fallbackRingtone?.let {
+            try {
+                if (it.isPlaying) {
+                    it.stop()
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error stopping fallbackRingtone in onDestroy: ${e.message}")
+            }
+        }
+        fallbackRingtone = null
         
         mediaPlayer?.apply {
             try {

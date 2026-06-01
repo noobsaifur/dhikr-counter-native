@@ -51,7 +51,10 @@ class MainActivity : ComponentActivity() {
                 }
             }
 
-            CountDhikrTheme(darkTheme = appState.settings.darkMode) {
+            CountDhikrTheme(
+                darkTheme = appState.settings.darkMode,
+                animateBackground = appState.settings.animateBackground
+            ) {
                 AppNavigation()
             }
         }

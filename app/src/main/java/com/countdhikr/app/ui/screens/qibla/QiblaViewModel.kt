@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlin.math.abs
 
@@ -83,10 +84,60 @@ class QiblaViewModel(application: Application) : AndroidViewModel(application), 
                         )
                     }
                 } else {
-                    _uiState.update { it.copy(loading = false, error = "Could not determine location") }
+                    // Fallback to cached location in AppSettings
+                    viewModelScope.launch {
+                        try {
+                            val appState = (getApplication() as com.countdhikr.app.CountDhikrApp).dhikrRepository.appState.first()
+                            val cachedLat = appState.settings.cachedLatitude
+                            val cachedLng = appState.settings.cachedLongitude
+                            if (cachedLat != null && cachedLng != null) {
+                                val qibla = QiblaCalculator.calculateQiblaDirection(cachedLat, cachedLng).toFloat()
+                                val distance = QiblaCalculator.calculateDistanceToKaaba(cachedLat, cachedLng)
+                                _uiState.update { 
+                                    it.copy(
+                                        qiblaDirection = qibla,
+                                        distanceToKaaba = distance,
+                                        latitude = cachedLat,
+                                        longitude = cachedLng,
+                                        loading = false,
+                                        error = null
+                                    )
+                                }
+                            } else {
+                                _uiState.update { it.copy(loading = false, error = "Could not determine location (No backup available)") }
+                            }
+                        } catch (e: Exception) {
+                            _uiState.update { it.copy(loading = false, error = "Could not determine location: ${e.message}") }
+                        }
+                    }
                 }
-            }.addOnFailureListener {
-                _uiState.update { state -> state.copy(loading = false, error = it.message) }
+            }.addOnFailureListener { exception ->
+                // Fallback to cached location on failure as well!
+                viewModelScope.launch {
+                    try {
+                        val appState = (getApplication() as com.countdhikr.app.CountDhikrApp).dhikrRepository.appState.first()
+                        val cachedLat = appState.settings.cachedLatitude
+                        val cachedLng = appState.settings.cachedLongitude
+                        if (cachedLat != null && cachedLng != null) {
+                            val qibla = QiblaCalculator.calculateQiblaDirection(cachedLat, cachedLng).toFloat()
+                            val distance = QiblaCalculator.calculateDistanceToKaaba(cachedLat, cachedLng)
+                            _uiState.update { 
+                                it.copy(
+                                    qiblaDirection = qibla,
+                                    distanceToKaaba = distance,
+                                    latitude = cachedLat,
+                                    longitude = cachedLng,
+                                    loading = false,
+                                    error = null
+                                )
+                            }
+                        } else {
+                            _uiState.update { it.copy(loading = false, error = exception.message ?: "Could not determine location") }
+                        }
+                    } catch (e: Exception) {
+                        _uiState.update { it.copy(loading = false, error = exception.message ?: "Could not determine location") }
+                    }
+                }
             }
         } catch (e: Exception) {
             _uiState.update { it.copy(loading = false, error = e.message) }
@@ -126,8 +177,8 @@ class QiblaViewModel(application: Application) : AndroidViewModel(application), 
                 azimuthInDegrees += 360f
             }
             
-            // Higher responsiveness with rotation vector
-            val alpha = if (event.sensor.type == Sensor.TYPE_ROTATION_VECTOR) 0.35f else 0.25f
+            // Heavy, premium fluid dampening
+            val alpha = if (event.sensor.type == Sensor.TYPE_ROTATION_VECTOR) 0.20f else 0.15f
             
             // Check for wrap-around crossing 0/360 degrees to prevent backward spinning lag
             var diff = azimuthInDegrees - (lastHeading % 360 + 360) % 360

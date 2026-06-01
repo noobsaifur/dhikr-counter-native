@@ -56,6 +56,12 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
+    fun toggleAnimateBackground() {
+        viewModelScope.launch {
+            dhikrRepository.updateSettings { it.copy(animateBackground = !it.animateBackground) }
+        }
+    }
+
     fun toggleReminder() {
         viewModelScope.launch {
             dhikrRepository.updateSettings { it.copy(reminderNotification = !it.reminderNotification) }

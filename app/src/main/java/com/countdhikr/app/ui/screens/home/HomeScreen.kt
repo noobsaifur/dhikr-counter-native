@@ -15,6 +15,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.VolumeUp
+import androidx.compose.material.icons.automirrored.filled.VolumeOff
 import androidx.compose.material.icons.outlined.NightsStay
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -71,11 +73,18 @@ fun HomeScreen(viewModel: HomeViewModel = viewModel()) {
     var showRipple by remember { mutableStateOf(false) }
     val rippleScale = remember { Animatable(0f) }
     val rippleAlpha = remember { Animatable(1f) }
+    var targetReachedTrigger by remember { mutableStateOf(0) }
 
     LaunchedEffect(uiState.count) {
         val count = uiState.count
         val target = uiState.target
         if (count > 0 && target > 0 && count % target == 0) {
+            targetReachedTrigger++
+        }
+    }
+
+    LaunchedEffect(targetReachedTrigger) {
+        if (targetReachedTrigger > 0) {
             showRipple = true
             rippleScale.snapTo(0f)
             rippleAlpha.snapTo(1f)
@@ -371,7 +380,7 @@ fun HomeScreen(viewModel: HomeViewModel = viewModel()) {
                     onClick = viewModel::onToggleSound
                 ) {
                     Icon(
-                        imageVector = if (uiState.soundEnabled) Icons.Default.VolumeUp else Icons.Default.VolumeOff,
+                        imageVector = if (uiState.soundEnabled) Icons.AutoMirrored.Filled.VolumeUp else Icons.AutoMirrored.Filled.VolumeOff,
                         contentDescription = "Sound Toggle",
                         tint = if (uiState.soundEnabled) Emerald else TextSecondary,
                         modifier = Modifier.size(20.dp)

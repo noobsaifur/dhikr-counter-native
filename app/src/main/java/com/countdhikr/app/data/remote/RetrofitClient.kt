@@ -37,7 +37,6 @@ object RetrofitClient {
 
     private val gson by lazy {
         GsonBuilder()
-            .setLenient()
             .create()
     }
 

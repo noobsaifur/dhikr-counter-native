@@ -11,6 +11,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.automirrored.filled.VolumeUp
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -89,6 +90,19 @@ fun SettingsScreen(viewModel: SettingsViewModel = viewModel()) {
                             subtitle = "Adjust screen theme",
                             trailing = {
                                 PremiumSwitch(checked = settings.darkMode, onCheckedChange = { viewModel.toggleDarkMode() })
+                            }
+                        )
+                        ThinDivider()
+                        // Aurora Animation
+                        SettingRow(
+                            icon = Icons.Default.AutoAwesome,
+                            title = "Aurora Animation",
+                            subtitle = "Slow sinusoidal background floating effects",
+                            trailing = {
+                                PremiumSwitch(
+                                    checked = settings.animateBackground,
+                                    onCheckedChange = { viewModel.toggleAnimateBackground() }
+                                )
                             }
                         )
                         ThinDivider()
@@ -174,7 +188,7 @@ fun SettingsScreen(viewModel: SettingsViewModel = viewModel()) {
                         ThinDivider()
                         // Click Sound
                         SettingRow(
-                            icon = Icons.Default.VolumeUp,
+                            icon = Icons.AutoMirrored.Filled.VolumeUp,
                             title = "Click Sound",
                             subtitle = "Play distinct audio click on count increments",
                             trailing = {
