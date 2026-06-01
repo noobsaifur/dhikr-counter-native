@@ -1,0 +1,21 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="96dp"
+    android:height="96dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Crescent moon / Tasbih loop -->
+    <path
+        android:fillColor="#1AA34A"
+        android:pathData="M12,2 C9.24,2 7,4.24 7,7 C7,9.76 9.24,12 12,12 C14.76,12 17,9.76 17,7 C17,4.24 14.76,2 12,2 Z M12,4 C13.66,4 15,5.34 15,7 C15,8.66 13.66,10 12,10 C10.34,10 9,8.66 9,7 C9,5.34 10.34,4 12,4 Z" />
+    <!-- Beads along the loop -->
+    <path
+        android:fillColor="#D4AF37"
+        android:pathData="M12,3.5 A1.5,1.5 0,1 1,12,0.5 A1.5,1.5 0,1 1,12,3.5 Z M15.5,5 A1.5,1.5 0,1 1,15.5,2 A1.5,1.5 0,1 1,15.5,5 Z M17,8.5 A1.5,1.5 0,1 1,17,5.5 A1.5,1.5 0,1 1,17,8.5 Z M15.5,12 A1.5,1.5 0,1 1,15.5,9 A1.5,1.5 0,1 1,15.5,12 Z M12,13.5 A1.5,1.5 0,1 1,12,10.5 A1.5,1.5 0,1 1,12,13.5 Z M8.5,12 A1.5,1.5 0,1 1,8.5,9 A1.5,1.5 0,1 1,8.5,12 Z M7,8.5 A1.5,1.5 0,1 1,7,5.5 A1.5,1.5 0,1 1,7,8.5 Z M8.5,5 A1.5,1.5 0,1 1,8.5,2 A1.5,1.5 0,1 1,8.5,5 Z" />
+    <!-- Tassel Connector & Hanging tassel -->
+    <path
+        android:fillColor="#1AA34A"
+        android:pathData="M11,12 H13 V15 H11 Z" />
+    <path
+        android:fillColor="#D4AF37"
+        android:pathData="M12,15 L10,22 H14 L12,15 Z" />
+</vector>

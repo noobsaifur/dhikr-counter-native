@@ -1,0 +1,67 @@
+<resources>
+    <string name="app_name">CountDhikr 2</string>
+    <string name="title_activity_main">CountDhikr 2</string>
+
+    <!-- Tab titles -->
+    <string name="tab_home">Home</string>
+    <string name="tab_list">List</string>
+    <string name="tab_prayer">Prayer</string>
+    <string name="tab_qibla">Qibla</string>
+    <string name="tab_settings">Settings</string>
+
+    <!-- Home Screen -->
+    <string name="general_counter">General Counter</string>
+    <string name="daily_mode">DAILY MODE</string>
+    <string name="general_mode">GENERAL</string>
+    <string name="todays_dhikr">Today\'s Dhikr</string>
+    <string name="reset">Reset</string>
+    <string name="save">Save</string>
+    <string name="target_label">Target: %d</string>
+    <string name="counting_daily_routine">Counting Daily Routine</string>
+
+    <!-- List Screen -->
+    <string name="add_dhikr">Add Dhikr</string>
+    <string name="add_dua">Add Dua</string>
+    <string name="dhikr_title">Title</string>
+    <string name="dhikr_target">Target Count</string>
+    <string name="dua_arabic">Arabic Text</string>
+    <string name="dua_description">Description</string>
+    <string name="no_dhikrs_yet">No dhikrs yet</string>
+    <string name="no_duas_yet">No duas yet</string>
+
+    <!-- Prayer Times -->
+    <string name="prayer_times">Prayer Times</string>
+    <string name="fajr">Fajr</string>
+    <string name="sunrise">Sunrise</string>
+    <string name="dhuhr">Dhuhr</string>
+    <string name="asr">Asr</string>
+    <string name="maghrib">Maghrib</string>
+    <string name="isha">Isha</string>
+    <string name="next_prayer">Next: %1$s in %2$s</string>
+    <string name="loading_prayer_times">Loading prayer times…</string>
+    <string name="mecca_default">Mecca (Default)</string>
+
+    <!-- Qibla -->
+    <string name="qibla_compass">Qibla Compass</string>
+    <string name="distance_to_kaaba">%,.0f km to Kaaba</string>
+    <string name="qibla_aligned">Aligned with Qibla!</string>
+    <string name="calibrate">Calibrate</string>
+
+    <!-- Settings -->
+    <string name="settings">Settings</string>
+    <string name="vibration">Vibration</string>
+    <string name="vibration_intensity">Vibration Intensity</string>
+    <string name="sound">Sound</string>
+    <string name="dark_mode">Dark Mode</string>
+    <string name="dhikr_reminder">Dhikr Reminder</string>
+    <string name="salat_reminder">Salat Reminder</string>
+    <string name="day_number_offset">Day Number Offset</string>
+    <string name="factory_reset">Factory Reset</string>
+    <string name="factory_reset_confirm">Are you sure you want to reset all data? This cannot be undone.</string>
+
+    <!-- Notifications -->
+    <string name="dhikr_reminder_title">Dhikr Reminder 🕌</string>
+    <string name="dhikr_reminder_body">You haven\'t done dhikr today. Take a moment to remember Allah.</string>
+    <string name="notification_channel_dhikr">Dhikr Reminders</string>
+    <string name="notification_channel_prayer">Prayer Reminders</string>
+</resources>
