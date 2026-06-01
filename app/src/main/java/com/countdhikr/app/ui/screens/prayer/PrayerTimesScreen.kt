@@ -35,6 +35,7 @@ import com.countdhikr.app.ui.screens.list.GlassCard
 import com.countdhikr.app.ui.theme.LocalThemeIsDark
 import com.countdhikr.app.util.Constants
 import com.countdhikr.app.util.DateUtils
+import com.countdhikr.app.ui.theme.CardSurfaceDark
 
 // ── Premium Design Tokens ──────────────────────────────────────────────────
 private val Emerald = Color(0xFF1AA34A)
@@ -539,7 +540,6 @@ fun PrayerScreen(viewModel: PrayerTimesViewModel = viewModel()) {
     }
 }
 
-import com.countdhikr.app.ui.theme.CardSurfaceDark
 
 @Composable
 fun PrayerTimeRow(name: String, time: String, icon: String, isNext: Boolean) {
